@@ -31,9 +31,9 @@ namespace JwtGenerate.Engine
             return resultado;
         }
 
-        public string  LoginUser (string SpName, User model)
+        public User LoginUser (string SpName, User model)
         {
-            string resultado = string.Empty;
+            User resultado = new User();
             using (Conexion)
             {
                 Conexion.Open();
@@ -44,8 +44,10 @@ namespace JwtGenerate.Engine
                 SqlDataReader lector = command.ExecuteReader();
                 int n = 0;
                 if (lector.Read())
-                {
-                  resultado= lector.GetString(0);
+                { 
+                  resultado.Username = lector.GetString(0);
+                  resultado.Password= lector.GetString(1);
+                  resultado.EmailAddress = lector.GetString(2);
                 }
                 lector.Close();
                 Conexion.Close();
