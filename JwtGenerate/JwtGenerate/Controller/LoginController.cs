@@ -59,19 +59,20 @@ namespace JwtGenerate.Controller
         private User AuthenticateUser(User model)
         {
             EngineDb Metodo = new EngineDb();
-            string password = Metodo.LoginUser("Sp_GetLoginUser", model);
+            User user = Metodo.LoginUser("Sp_GetLoginUser", model);
             string entry = model.Username + model.Password;
             EngineJwt Funcion = new EngineJwt();
-            bool comparacion = Funcion.CompareString(password, entry);
-            User user = new User();
+            bool comparacion = Funcion.CompareString(model.Password, entry);
             if (comparacion)
             {
-                user.Username = model.Username;
-                user.EmailAddress = "";
                 user.DateOfJoing = DateTime.Now;
-
+                return user;
             }
-            return model;
+            else
+            {
+                model = null;
+            }
+            return model; 
         }
     }
 }
