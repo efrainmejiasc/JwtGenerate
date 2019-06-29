@@ -13,6 +13,7 @@ namespace JwtGenerate.Engine
     
         private SqlConnection Conexion = new SqlConnection(EngineData.DefaultConnection);
         private EngineData DataName = EngineData.Instance();
+        private string error = string.Empty;
 
         public bool InsertUser (User model)
         {
@@ -21,18 +22,27 @@ namespace JwtGenerate.Engine
             {
                 Conexion.Open();
                 SqlCommand command = new SqlCommand(EngineData.InsertUser, Conexion);
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Clear();
-                command.Parameters.AddWithValue("@Username", model.Username);
-                command.Parameters.AddWithValue("@Password", model.Password);
-                command.Parameters.AddWithValue("@FechaRegistro", model.FechaRegistro); 
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@Username", model.Username);
+                    command.Parameters.AddWithValue("@Password", model.Password);
+                    command.Parameters.AddWithValue("@FechaRegistro", model.FechaRegistro);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Conexion.Close();
+                    error = ex.ToString();
+                }
                 Conexion.Close();
                 resultado = true;
             }
             return resultado;
         }
 
-        public User GetUser ( User model)
+        public User GetUser (User model)
         {
             User resultado = new User();
             using (Conexion)

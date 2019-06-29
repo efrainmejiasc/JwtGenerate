@@ -43,7 +43,6 @@ namespace JwtGenerate.Controller
             return response;
         }
 
-
         [AllowAnonymous]
         [HttpPost]
         public IActionResult Login([FromBody] User login)
