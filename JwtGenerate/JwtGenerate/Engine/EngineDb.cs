@@ -13,7 +13,7 @@ namespace JwtGenerate.Engine
     
         private SqlConnection Conexion = new SqlConnection(EngineData.DefaultConnection);
         private EngineData DataName = EngineData.Instance();
-        private string error = string.Empty;
+        private string failure = string.Empty;
 
         public bool InsertUser (User model)
         {
@@ -34,7 +34,7 @@ namespace JwtGenerate.Engine
                 catch (Exception ex)
                 {
                     Conexion.Close();
-                    error = ex.ToString();
+                    failure = ex.ToString();
                 }
                 Conexion.Close();
                 resultado = true;
@@ -63,6 +63,11 @@ namespace JwtGenerate.Engine
                 Conexion.Close();
             }
             return resultado;
+        }
+
+        public string Failure()
+        {
+            return failure;
         }
     }
 }

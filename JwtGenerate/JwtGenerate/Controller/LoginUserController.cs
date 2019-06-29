@@ -19,7 +19,7 @@ namespace JwtGenerate.Controller
     [ApiController]
     public class LoginUserController : ControllerBase
     {
-       private IConfiguration _config;
+       private IConfiguration _config ;
 
         [AllowAnonymous]
         [HttpPost]

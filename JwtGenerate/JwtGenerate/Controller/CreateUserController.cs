@@ -30,8 +30,12 @@ namespace JwtGenerate.Controller
             EngineDb Metodo = new EngineDb();
             resultado = Metodo.InsertUser(create);
             if (!resultado)
-                return response = new HttpResponseMessage(HttpStatusCode.NotAcceptable);//No pudo crearse usuario 406
-
+            {
+                response = new HttpResponseMessage(HttpStatusCode.NotAcceptable);//No pudo crearse usuario 406
+                response.Content = new StringContent(Metodo.Failure());//Informacion especifica del error
+                return response;
+            }
+                
             response.Headers.Location = new Uri(EngineData.UrlBase + EngineData.EndPoitLogin);
             return response;
         }
