@@ -10,16 +10,17 @@ namespace JwtGenerate.Engine
 {
     public class EngineDb
     {
-        public static string DefaultConnection { get; set; }
-        private SqlConnection Conexion = new SqlConnection(EngineDb.DefaultConnection);
+    
+        private SqlConnection Conexion = new SqlConnection(EngineData.DefaultConnection);
+        private EngineData DataName = EngineData.Instance();
 
-        public bool InsertUser(string SpName, User model)
+        public bool InsertUser (User model)
         {
             bool resultado = false;
             using (Conexion)
             {
                 Conexion.Open();
-                SqlCommand command = new SqlCommand(SpName, Conexion);
+                SqlCommand command = new SqlCommand(EngineData.InsertUser, Conexion);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Clear();
                 command.Parameters.AddWithValue("@Username", model.Username);
@@ -31,13 +32,13 @@ namespace JwtGenerate.Engine
             return resultado;
         }
 
-        public User LoginUser (string SpName, User model)
+        public User GetUser ( User model)
         {
             User resultado = new User();
             using (Conexion)
             {
                 Conexion.Open();
-                SqlCommand command = new SqlCommand(SpName, Conexion);
+                SqlCommand command = new SqlCommand(EngineData.GettUser, Conexion);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Clear();
                 command.Parameters.AddWithValue("@Username", model.Username);       

@@ -17,9 +17,32 @@ namespace JwtGenerate.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private IConfiguration _config;
+       private IConfiguration _config;
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult CreateUser([FromBody] User create)
+        {
+            IActionResult response = Unauthorized();
+            EngineJwt Funcion = new EngineJwt();
+            bool resultado = false;
+            resultado = Funcion.CompareString(create.SignatureApp, EngineData.SignatureApp);
+            if (resultado)
+            {
+                EngineDb Metodo = new EngineDb();
+                resultado = Metodo.InsertUser(create);
+                if (resultado)
+                {
+                    User model = new User();
+                    var tokenString = GenerateJSONWebToken(model);
+                    response = Ok(new { token = tokenString });
+                }
+            }
+            return response;
+        }
+
 
         [AllowAnonymous]
         [HttpPost]
@@ -33,9 +56,27 @@ namespace JwtGenerate.Controller
                 var tokenString = GenerateJSONWebToken(model);
                 response = Ok(new { token = tokenString });
             }
-
             return response;
         }
+
+        private User AuthenticateUser(User model)
+        {
+            EngineDb Metodo = new EngineDb();
+            User user = Metodo.GetUser(model);
+            string entry = model.Username + model.Password;
+            EngineJwt Funcion = new EngineJwt();
+            bool comparacion = Funcion.CompareString(model.Password, entry);
+            if (comparacion)
+            {
+                return user;
+            }
+            else
+            {
+                model = null;
+            }
+            return model;
+        }
+
         private string GenerateJSONWebToken(User userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -43,7 +84,7 @@ namespace JwtGenerate.Controller
             var claims = new[] {
                                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
                                new Claim(JwtRegisteredClaimNames.Email, userInfo.EmailAddress),
-                               new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
+                               new Claim("DateOfJoing", userInfo.DateOfJoing),
                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -55,24 +96,6 @@ namespace JwtGenerate.Controller
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-        private User AuthenticateUser(User model)
-        {
-            EngineDb Metodo = new EngineDb();
-            User user = Metodo.LoginUser("Sp_GetLoginUser", model);
-            string entry = model.Username + model.Password;
-            EngineJwt Funcion = new EngineJwt();
-            bool comparacion = Funcion.CompareString(model.Password, entry);
-            if (comparacion)
-            {
-                user.DateOfJoing = DateTime.Now;
-                return user;
-            }
-            else
-            {
-                model = null;
-            }
-            return model; 
-        }
+     
     }
 }
