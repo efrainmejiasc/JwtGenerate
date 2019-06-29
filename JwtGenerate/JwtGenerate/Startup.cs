@@ -62,10 +62,10 @@ namespace JwtGenerate
                 app.UseDeveloperExceptionPage();
             }
 
-           /* app.Run(async (context) =>
+            app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World!");
-            });*/
+            });
 
             this.builder = new ConfigurationBuilder()
            .SetBasePath(env.ContentRootPath)

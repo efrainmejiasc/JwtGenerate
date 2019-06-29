@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JwtGenerate.Controller
 {
-    [Route("api/[controller]")]
+    [Route("api/[CreateUser]")]
     [ApiController]
     public class CreateUserController : ControllerBase
     {
