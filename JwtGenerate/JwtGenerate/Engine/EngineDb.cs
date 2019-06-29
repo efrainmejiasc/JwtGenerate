@@ -53,7 +53,6 @@ namespace JwtGenerate.Engine
                 command.Parameters.Clear();
                 command.Parameters.AddWithValue("@Username", model.Username);       
                 SqlDataReader lector = command.ExecuteReader();
-                int n = 0;
                 if (lector.Read())
                 { 
                   resultado.Username = lector.GetString(0);
