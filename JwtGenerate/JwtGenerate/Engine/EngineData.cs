@@ -17,7 +17,12 @@ namespace JwtGenerate.Engine
             return valor;
         }
 
+
         public static string DefaultConnection { get; set; }
+
+        public static string UrlBase { get; set; }
+
+        public static string EndPoitLogin = "LoginUser";
 
         public static string SignatureApp = "MiFirmaElectronica";
 

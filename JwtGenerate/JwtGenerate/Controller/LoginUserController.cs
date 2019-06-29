@@ -17,31 +17,9 @@ namespace JwtGenerate.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class LoginUserController : ControllerBase
     {
        private IConfiguration _config;
-
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult CreateUser([FromBody] User create)
-        {
-            IActionResult response = Unauthorized();
-            EngineJwt Funcion = new EngineJwt();
-            bool resultado = false;
-            resultado = Funcion.CompareString(create.SignatureApp, EngineData.SignatureApp);
-            if (resultado)
-            {
-                EngineDb Metodo = new EngineDb();
-                resultado = Metodo.InsertUser(create);
-                if (resultado)
-                {
-                    User model = new User();
-                    var tokenString = GenerateJSONWebToken(model);
-                    response = Ok(new { token = tokenString });
-                }
-            }
-            return response;
-        }
 
         [AllowAnonymous]
         [HttpPost]
@@ -88,7 +66,7 @@ namespace JwtGenerate.Controller
             };
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
+              _config["Jwt:Audience"],
               null,
               expires: DateTime.Now.AddMinutes(20),
               signingCredentials: credentials);
