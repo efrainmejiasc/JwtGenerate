@@ -34,8 +34,8 @@ namespace TestJwtGenerate
                 HttpClient client = new HttpClient();
                 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/test");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencode"));
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/createuser");
                 User User = new User();
                 User = SetUser();
                 var formData = new List<KeyValuePair<string, string>>();
