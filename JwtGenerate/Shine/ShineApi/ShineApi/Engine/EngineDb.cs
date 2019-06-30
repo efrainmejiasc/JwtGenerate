@@ -56,7 +56,7 @@ namespace ShineApi.Engine
                 {
                     resultado.Username = lector.GetString(0);
                     resultado.Password = lector.GetString(1);
-                    resultado.EmailAddress = lector.GetString(2);
+                    resultado.Email = lector.GetString(2);
                 }
                 lector.Close();
                 Conexion.Close();

@@ -60,8 +60,8 @@ namespace ShineApi.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
                                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
-                               new Claim(JwtRegisteredClaimNames.Email, userInfo.EmailAddress),
-                               new Claim("DateOfJoing", userInfo.DateOfJoing),
+                               new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
+                               new Claim("ExpiracionToken", userInfo.ExpiracionToken),
                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

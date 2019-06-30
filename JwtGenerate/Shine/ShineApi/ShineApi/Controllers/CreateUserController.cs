@@ -18,7 +18,7 @@ namespace ShineApi.Controllers
     {
         [AllowAnonymous]
         [HttpPost]
-        public HttpResponseMessage Post([FromBody] User create)
+        public HttpResponseMessage PostCreateUser([FromBody] User create)
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             if (create == null)
@@ -39,7 +39,7 @@ namespace ShineApi.Controllers
                 return response;
             }
 
-            response.Headers.Location = new Uri(EngineData.UrlBase + EngineData.EndPoitLogin);
+            response.Headers.Location = new Uri(EngineData.UrlBase + EngineData.EndPointLogin);
             return response;
         }
     }
