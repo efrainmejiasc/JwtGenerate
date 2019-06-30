@@ -45,6 +45,7 @@ namespace ShineApi.Controllers
             bool comparacion = Funcion.CompareString(model.Password, entry);
             if (comparacion)
             {
+                user.Token = GenerateJSONWebToken(model);
                 return user;
             }
             else

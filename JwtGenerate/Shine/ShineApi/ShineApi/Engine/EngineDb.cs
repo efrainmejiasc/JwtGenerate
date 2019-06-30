@@ -53,12 +53,14 @@ namespace ShineApi.Engine
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Clear();
                 command.Parameters.AddWithValue("@Username", model.Username);
+                command.Parameters.AddWithValue("@Email", model.Email);
                 SqlDataReader lector = command.ExecuteReader();
                 if (lector.Read())
                 {
-                    resultado.Username = lector.GetString(0);
-                    resultado.Password = lector.GetString(1);
-                    resultado.Email = lector.GetString(2);
+                    resultado.Id = lector.GetInt32(0);
+                    resultado.Username = lector.GetString(1);
+                    resultado.Password = lector.GetString(2);
+                    resultado.Email = lector.GetString(3);
                 }
                 lector.Close();
                 Conexion.Close();

@@ -65,6 +65,7 @@ namespace TestJwtGenerate
         {
             User User = new User
             {
+                Id = 0,
                 Username = "EfrainMejias",
                 Password = "1234santiago",
                 Email = "efrainmejiasc@gmail.com",
