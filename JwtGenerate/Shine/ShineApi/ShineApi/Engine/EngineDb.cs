@@ -12,6 +12,7 @@ namespace ShineApi.Engine
     {
         private SqlConnection Conexion = new SqlConnection(EngineData.DefaultConnection);
         private EngineData DataName = EngineData.Instance();
+        private EngineProyect Funcion = new EngineProyect();
         private string failure = string.Empty;
 
         public bool InsertUser(User model)
@@ -26,7 +27,7 @@ namespace ShineApi.Engine
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Clear();
                     command.Parameters.AddWithValue("@Username", model.Username);
-                    command.Parameters.AddWithValue("@Password", model.Password);
+                    command.Parameters.AddWithValue("@Password",Funcion.ConvertirBase64(model.Username + model.Password));
                     command.Parameters.AddWithValue("@FechaRegistro", model.FechaRegistro);
                     command.ExecuteNonQuery();
                 }

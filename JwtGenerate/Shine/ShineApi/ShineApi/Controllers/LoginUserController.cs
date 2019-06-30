@@ -39,9 +39,9 @@ namespace ShineApi.Controllers
         private User AuthenticateUser(User model)
         {
             EngineDb Metodo = new EngineDb();
-            User user = Metodo.GetUser(model);
-            string entry = model.Username + model.Password;
             EngineProyect Funcion = new EngineProyect();
+            User user = Metodo.GetUser(model);
+            string entry = Funcion.ConvertirBase64(model.Username + model.Password);
             bool comparacion = Funcion.CompareString(model.Password, entry);
             if (comparacion)
             {
