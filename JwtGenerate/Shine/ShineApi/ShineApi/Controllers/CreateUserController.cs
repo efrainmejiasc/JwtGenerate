@@ -39,7 +39,7 @@ namespace ShineApi.Controllers
                 return response;
             }
 
-            response.Headers.Location = new Uri(EngineData.UrlBase + EngineData.EndPoitLogin);
+            response.Headers.Location = new Uri(EngineData.UrlBase + EngineData.EndPointLogin);
             return response;
         }
     }

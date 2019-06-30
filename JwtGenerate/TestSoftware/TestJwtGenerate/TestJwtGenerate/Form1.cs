@@ -23,75 +23,40 @@ namespace TestJwtGenerate
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           CreateUser();
+          
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+             CreateUser();
         }
 
         public async Task<string> CreateUser()
         {
             string resultado = string.Empty;
-            try
-            {
-                HttpClient client = new HttpClient();
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencode"));
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/createuser");
-                User User = new User();
-                User = SetUser();
-                var formData = new List<KeyValuePair<string, string>>();
-                formData.Add(new KeyValuePair<string, string>("Username", User.Username));
-                formData.Add(new KeyValuePair<string, string>("Password", User.Password));
-                formData.Add(new KeyValuePair<string, string>("EmailAddress", User.Email));
-                formData.Add(new KeyValuePair<string, string>("SignatureApp", User.SignatureApp));
-                formData.Add(new KeyValuePair<string, string>("FechaRegistro", User.FechaRegistro));
-                formData.Add(new KeyValuePair<string, string>("ExpiracionToken", User.ExpiracionToken));
-                request.Content = new FormUrlEncodedContent(formData);
-                var response = await client.SendAsync(request);
-                if (response.IsSuccessStatusCode)
-                {
-                    resultado = response.Content.ReadAsStringAsync().Result;
-                    User = JsonConvert.DeserializeObject<User>(resultado);
-                }
-                else
-                {
-                    resultado = response.StatusCode.ToString();
-                }
-            }
-            catch(Exception ex)
-            {
-                string error = ex.ToString();
-            }
-
-            return resultado;
-        }
-
-
-        public async Task<string> CreateUser2()
-        {
-            string resultado = string.Empty;
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/CreateUser");
             User User = new User();
             User = SetUser();
-            var dict = new Dictionary<string, string>();
-            dict.Add("Username", User.Username);
-            dict.Add("Password", User.Password);
-            dict.Add("EmailAddress", User.Email);
-            dict.Add("SignatureApp", User.SignatureApp);
-            dict.Add("FechaRegistro", User.FechaRegistro);
-            dict.Add("ExpiracionToken", User.ExpiracionToken);
-            var client = new HttpClient();
-            var req = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/CreateUser")
+            var formData = new List<KeyValuePair<string, string>>();
+            formData.Add(new KeyValuePair<string, string>("Username", User.Username));
+            formData.Add(new KeyValuePair<string, string>("Password", User.Password));
+            formData.Add(new KeyValuePair<string, string>("EmailAddress", User.Email));
+            formData.Add(new KeyValuePair<string, string>("SignatureApp", User.SignatureApp));
+            formData.Add(new KeyValuePair<string, string>("FechaRegistro", User.FechaRegistro));
+            formData.Add(new KeyValuePair<string, string>("ExpiracionToken", User.ExpiracionToken));
+            request.Content = new FormUrlEncodedContent(formData);
+            var stringified = JsonConvert.SerializeObject(User);
+            var response = await client.PostAsync("http://localhost:58663/api/CreateUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            if (response.IsSuccessStatusCode)
             {
-                Content = new FormUrlEncodedContent(dict)
-            };
-            var res = await client.SendAsync(req);
-            if (res.IsSuccessStatusCode)
-            {
-                resultado = res.Content.ReadAsStringAsync().Result;
-
+                resultado = response.Content.ReadAsStringAsync().Result;
+                User = JsonConvert.DeserializeObject<User>(resultado);
             }
             else
             {
-                resultado = res.StatusCode.ToString();
+                resultado = response.StatusCode.ToString();
             }
             return resultado;
         }
@@ -103,12 +68,43 @@ namespace TestJwtGenerate
                 Username = "EfrainMejias",
                 Password = "1234santiago",
                 Email = "efrainmejiasc@gmail.com",
-                FechaRegistro = "30/06/2019",
-                ExpiracionToken = "30/06/2019",
-                SignatureApp ="dfauydfua"
+                FechaRegistro = DateTime.UtcNow.ToString(),
+                ExpiracionToken = "",
+                SignatureApp ="MiFirmaElectronica"
             };
             return User;
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+           LoginUser();
+        }
+
+        private async Task<string> LoginUser()
+        {
+            string resultado = string.Empty;
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/LoginUser");
+            User User = new User();
+            User = SetUser();
+            var formData = new List<KeyValuePair<string, string>>();
+            formData.Add(new KeyValuePair<string, string>("Username", User.Username));
+            formData.Add(new KeyValuePair<string, string>("Password", User.Password));
+
+            request.Content = new FormUrlEncodedContent(formData);
+            var stringified = JsonConvert.SerializeObject(User);
+            var response = await client.PostAsync("http://localhost:58663/api/LoginUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            if (response.IsSuccessStatusCode)
+            {
+                resultado = response.Content.ReadAsStringAsync().Result;
+                User = JsonConvert.DeserializeObject<User>(resultado);
+            }
+            else
+            {
+                resultado = response.StatusCode.ToString();
+            }
+            return resultado;
+        }
     }
 }

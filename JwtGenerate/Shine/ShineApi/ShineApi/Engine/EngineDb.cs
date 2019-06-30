@@ -28,6 +28,7 @@ namespace ShineApi.Engine
                     command.Parameters.Clear();
                     command.Parameters.AddWithValue("@Username", model.Username);
                     command.Parameters.AddWithValue("@Password",Funcion.ConvertirBase64(model.Username + model.Password));
+                    command.Parameters.AddWithValue("@Email", model.Email);
                     command.Parameters.AddWithValue("@FechaRegistro", model.FechaRegistro);
                     command.ExecuteNonQuery();
                 }

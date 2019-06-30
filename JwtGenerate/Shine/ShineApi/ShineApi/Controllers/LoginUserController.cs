@@ -61,7 +61,7 @@ namespace ShineApi.Controllers
             var claims = new[] {
                                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
                                new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
-                               new Claim("ExpiracionToken", userInfo.ExpiracionToken),
+                               new Claim("ExpiracionToken", DateTime.UtcNow.AddMinutes(15).ToString()),
                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
