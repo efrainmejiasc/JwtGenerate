@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using JwtGenerate.Engine;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ShineApi.Engine;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace JwtGenerate
+namespace ShineApi
 {
     public class Startup
     {
-
         private IConfigurationBuilder builder;
         public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
@@ -29,9 +31,7 @@ namespace JwtGenerate
                .AddEnvironmentVariables();
         }
 
-      
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             EngineData.DefaultConnection = Configuration["ConnectionStrings:ConexionDb"];
@@ -52,6 +52,7 @@ namespace JwtGenerate
                };
            });
             services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,16 +62,13 @@ namespace JwtGenerate
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
-            app.Run(async (context) =>
+            else
             {
-                await context.Response.WriteAsync("Shine Api");
-            });
+                app.UseHsts();
+            }
 
-            this.builder = new ConfigurationBuilder()
-           .SetBasePath(env.ContentRootPath)
-           .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-           .AddEnvironmentVariables();
+            app.UseHttpsRedirection();
+            app.UseMvc();
         }
     }
 }

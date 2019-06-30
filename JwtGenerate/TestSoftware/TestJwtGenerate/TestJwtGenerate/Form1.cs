@@ -29,28 +29,35 @@ namespace TestJwtGenerate
         public async Task<string> CreateUser()
         {
             string resultado = string.Empty;
-            HttpClient client = new HttpClient();
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:51484/api/CreateUser");
-            User User = new User();
-            User = SetUser();
-            var formData = new List<KeyValuePair<string, string>>();
-            formData.Add(new KeyValuePair<string, string>("Username",User.Username));
-            formData.Add(new KeyValuePair<string, string>("Password",User.Password));
-            formData.Add(new KeyValuePair<string, string>("EmailAddress", User.EmailAddress));
-            formData.Add(new KeyValuePair<string, string>("SignatureApp", User.SignatureApp));
-            request.Content = new FormUrlEncodedContent(formData);
-            var response = await client.SendAsync(request);
-            if (response.IsSuccessStatusCode)
+            try
             {
-               resultado = response.Content.ReadAsStringAsync().Result;
-               User = JsonConvert.DeserializeObject<User>(resultado);
+                HttpClient client = new HttpClient();
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/test");
+                User User = new User();
+                User = SetUser();
+                var formData = new List<KeyValuePair<string, string>>();
+                formData.Add(new KeyValuePair<string, string>("Username", User.Username));
+                formData.Add(new KeyValuePair<string, string>("Password", User.Password));
+                formData.Add(new KeyValuePair<string, string>("EmailAddress", User.EmailAddress));
+                formData.Add(new KeyValuePair<string, string>("SignatureApp", User.SignatureApp));
+                request.Content = new FormUrlEncodedContent(formData);
+                var response = await client.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    resultado = response.Content.ReadAsStringAsync().Result;
+                    User = JsonConvert.DeserializeObject<User>(resultado);
+                }
+                else
+                {
+                    resultado = response.StatusCode.ToString();
+                }
             }
-            else
+            catch(Exception ex)
             {
-                resultado = response.StatusCode.ToString();
+                string error = ex.ToString();
             }
 
             return resultado;
