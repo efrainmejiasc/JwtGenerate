@@ -46,21 +46,31 @@ namespace ShineApi.Engine
         public User GetUser(User model)
         {
             User resultado = new User();
+            SqlDataReader lector = null;
             using (Conexion)
             {
                 Conexion.Open();
                 SqlCommand command = new SqlCommand(EngineData.GettUser, Conexion);
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Clear();
-                command.Parameters.AddWithValue("@Username", model.Username);
-                command.Parameters.AddWithValue("@Email", model.Email);
-                SqlDataReader lector = command.ExecuteReader();
-                if (lector.Read())
+                try
                 {
-                    resultado.Id = lector.GetInt32(0);
-                    resultado.Username = lector.GetString(1);
-                    resultado.Password = lector.GetString(2);
-                    resultado.Email = lector.GetString(3);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@Username", model.Username);
+                    command.Parameters.AddWithValue("@Email", model.Email);
+                    lector = command.ExecuteReader();
+                    if (lector.Read())
+                    {
+                        resultado.Id = lector.GetInt32(0);
+                        resultado.Username = lector.GetString(1);
+                        resultado.Password = lector.GetString(2);
+                        resultado.Email = lector.GetString(3);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lector.Close();
+                    Conexion.Close();
+                    failure = ex.ToString();
                 }
                 lector.Close();
                 Conexion.Close();
