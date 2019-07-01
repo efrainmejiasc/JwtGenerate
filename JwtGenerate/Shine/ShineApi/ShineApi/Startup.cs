@@ -36,6 +36,10 @@ namespace ShineApi
         {
             EngineData.DefaultConnection = Configuration["ConnectionStrings:ConexionDb"];
             EngineData.UrlBase = Configuration["Site:UrlBase"];
+            EngineData.JwtKey = Configuration["Jwt:Key"];
+            EngineData.JwtIssuer = Configuration["Jwt:Issuer"];
+            EngineData.JwtAudience = Configuration["Jwt:Audience"];
+
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>

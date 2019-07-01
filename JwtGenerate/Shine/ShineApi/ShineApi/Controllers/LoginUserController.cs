@@ -26,38 +26,35 @@ namespace ShineApi.Controllers
         public IActionResult Login([FromBody] User login)
         {
             IActionResult response = Unauthorized();
-            User model = AuthenticateUser(login);
+            bool resultado = AuthenticateUser(login);
+            if (!resultado)
+                return response;
 
-            if (model != null)
-            {
-                var tokenString = GenerateJSONWebToken(model);
-                response = Ok(new { token = tokenString });
-            }
+            var tokenString = GenerateJSONWebToken(login);
+            response = Ok(new { token = tokenString });
             return response;
         }
 
-        private User AuthenticateUser(User model)
+        private bool AuthenticateUser(User login)
         {
+            bool resultado = false;
             EngineDb Metodo = new EngineDb();
             EngineProyect Funcion = new EngineProyect();
-            User user = Metodo.GetUser(model);
-            string entry = Funcion.ConvertirBase64(model.Username + model.Password);
-            bool comparacion = Funcion.CompareString(model.Password, entry);
-            if (comparacion)
-            {
-                user.Token = GenerateJSONWebToken(model);
-                return user;
-            }
-            else
-            {
-                model = null;
-            }
-            return model;
+            User user = new User();
+            user = Metodo.GetUser(login);
+            string entry = Funcion.ConvertirBase64(login.Username + login.Password);
+            bool comparacion = Funcion.CompareString(user.Password, entry);
+            if (!comparacion)
+                return resultado;
+
+            user.Token = GenerateJSONWebToken(user);
+            resultado = true;
+            return resultado;
         }
 
         private string GenerateJSONWebToken(User userInfo)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EngineData.JwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
                                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
@@ -66,10 +63,10 @@ namespace ShineApi.Controllers
                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Audience"],
+            var token = new JwtSecurityToken(EngineData.JwtKey,
+              EngineData.JwtIssuer,
               null,
-              expires: DateTime.Now.AddMinutes(20),
+              expires: DateTime.UtcNow.AddMinutes(15),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

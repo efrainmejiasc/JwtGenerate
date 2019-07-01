@@ -22,6 +22,12 @@ namespace ShineApi.Engine
 
         public static string UrlBase { get; set; }
 
+        public static string JwtKey { get; set; }
+
+        public static string JwtIssuer { get; set; }
+
+        public static string JwtAudience{ get; set; }
+
         public static string EndPointLogin = "LoginUser";
 
         public static string SignatureApp = "MiFirmaElectronica";
