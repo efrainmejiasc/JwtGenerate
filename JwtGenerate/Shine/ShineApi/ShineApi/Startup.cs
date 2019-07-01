@@ -14,6 +14,9 @@ using Microsoft.IdentityModel.Tokens;
 using ShineApi.Engine;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using ShineApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShineApi
 {
@@ -40,7 +43,17 @@ namespace ShineApi
             EngineData.JwtIssuer = Configuration["Jwt:Issuer"];
             EngineData.JwtAudience = Configuration["Jwt:Audience"];
 
+            //EntityFramework
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
+            services.AddDbContext<ShineContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("ConexionDb")));
+            
+            //JasonWebToken JWt
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>
            {

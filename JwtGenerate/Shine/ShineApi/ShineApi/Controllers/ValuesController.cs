@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ShineApi.Data;
+using ShineApi.Data;
 
 namespace ShineApi.Controllers
 {
@@ -11,11 +14,17 @@ namespace ShineApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly ShineContext  context;
+
+        public ValuesController (ShineContext _context)
+        {
+            context = _context;
+        }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "SHINE", "Api/ . . . " };
+            return new string[] { "SHINE", "Api/  Ejecutandose. . . " };
         }
 
         // GET api/values/5
@@ -28,9 +37,9 @@ namespace ShineApi.Controllers
         // POST api/values
         [AllowAnonymous]
         [HttpPost]
-        public string Post()
+        public List<Client> Post()
         {
-            return "Hola Mundo";
+            return (context.Client.ToList());
         }
 
         // PUT api/values/5

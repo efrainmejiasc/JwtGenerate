@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ShineApi.Engine;
-using ShineApi.Models;
+using ShineApi.Data;
 
 namespace ShineApi.Controllers
 {

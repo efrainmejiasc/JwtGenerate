@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShineApi.Engine;
-using ShineApi.Models;
+using ShineApi.Data;
 
 namespace ShineApi.Controllers
 {
