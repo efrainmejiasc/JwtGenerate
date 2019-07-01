@@ -16,6 +16,9 @@ namespace TestJwtGenerate
 {
     public partial class Form1 : Form
     {
+
+        string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjE5ODU3MDMsImlzcyI6IlRoaXNpc215U2VjcmV0S2V5IiwiYXVkIjoiVGVzdC5jb20ifQ.jb39ebjjzyA6Y-_NVBT4PA3Y6I1sK61numdBygF3rB0";
+
         public Form1()
         {
             InitializeComponent();
@@ -106,6 +109,19 @@ namespace TestJwtGenerate
                 resultado = response.StatusCode.ToString();
             }
             return resultado;
+        }
+
+        public string DecodeBase64(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string[] p = token.Split('.');
+            string resultado = DecodeBase64(p[1]);
+            int K = 0;
         }
     }
 }
