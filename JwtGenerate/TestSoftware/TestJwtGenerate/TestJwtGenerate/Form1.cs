@@ -39,7 +39,7 @@ namespace TestJwtGenerate
             string resultado = string.Empty;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/CreateUser");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445//api/CreateUser");
             User User = new User();
             User = SetUser();
             var formData = new List<KeyValuePair<string, string>>();
@@ -47,11 +47,11 @@ namespace TestJwtGenerate
             formData.Add(new KeyValuePair<string, string>("Password", User.Password));
             formData.Add(new KeyValuePair<string, string>("EmailAddress", User.Email));
             formData.Add(new KeyValuePair<string, string>("SignatureApp", User.SignatureApp));
-            formData.Add(new KeyValuePair<string, string>("FechaRegistro", User.FechaRegistro));
+            formData.Add(new KeyValuePair<string, string>("FechaRegistro", User.RegisteredDate.ToString()));
             formData.Add(new KeyValuePair<string, string>("ExpiracionToken", User.ExpiracionToken));
             request.Content = new FormUrlEncodedContent(formData);
             var stringified = JsonConvert.SerializeObject(User);
-            var response = await client.PostAsync("http://localhost:58663/api/CreateUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("http://localhost:58445/api/CreateUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
                 resultado = response.Content.ReadAsStringAsync().Result;
@@ -69,10 +69,16 @@ namespace TestJwtGenerate
             User User = new User
             {
                 Id = 0,
-                Username = "EfrainMejias",
+                Name = "Efrain",
+                LastName = "Mejias C",
+                Username = "EfrainMejiasC",
                 Password = "1234santiago",
                 Email = "efrainmejiasc@gmail.com",
-                FechaRegistro = DateTime.UtcNow.ToString(),
+                PhoneNumber = "+5804204133677",
+                FavoriteGame = "BaseBall",
+                Gender = "Masculino",
+                BirthDate = Convert.ToDateTime("1972/02/08"),
+                RegisteredDate = DateTime.UtcNow,
                 ExpiracionToken = "",
                 SignatureApp ="MiFirmaElectronica"
             };
@@ -89,16 +95,17 @@ namespace TestJwtGenerate
             string resultado = string.Empty;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/LoginUser");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445/api/LoginUser");
             User User = new User();
             User = SetUser();
             var formData = new List<KeyValuePair<string, string>>();
             formData.Add(new KeyValuePair<string, string>("Username", User.Username));
             formData.Add(new KeyValuePair<string, string>("Password", User.Password));
+            formData.Add(new KeyValuePair<string, string>("Email", User.Email));
 
             request.Content = new FormUrlEncodedContent(formData);
             var stringified = JsonConvert.SerializeObject(User);
-            var response = await client.PostAsync("http://localhost:58663/api/LoginUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("http://localhost:58445/api/LoginUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
                 resultado = response.Content.ReadAsStringAsync().Result;

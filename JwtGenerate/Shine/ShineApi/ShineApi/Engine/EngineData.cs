@@ -28,12 +28,12 @@ namespace ShineApi.Engine
 
         public static string JwtAudience{ get; set; }
 
-        public static string EndPointLogin = "LoginUser";
+        public static string EndPointLogin = "LoginClient";
 
         public static string SignatureApp = "MiFirmaElectronica";
 
-        public static string InsertUser = "Sp_InsertUser";
+        public static string InsertClient= "Sp_InsertClient";
 
-        public static string GettUser = "Sp_GetUser";
+        public static string GetClient = "Sp_GetClient";
     }
 }

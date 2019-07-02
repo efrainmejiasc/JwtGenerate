@@ -15,7 +15,7 @@ using ShineApi.Engine;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
-using ShineApi.Data;
+using ShineApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ShineApi

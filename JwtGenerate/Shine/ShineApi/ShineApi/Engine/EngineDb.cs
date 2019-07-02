@@ -1,4 +1,4 @@
-﻿using ShineApi.Data;
+﻿using ShineApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,15 +21,21 @@ namespace ShineApi.Engine
             using (Conexion)
             {
                 Conexion.Open();
-                SqlCommand command = new SqlCommand(EngineData.InsertUser, Conexion);
+                SqlCommand command = new SqlCommand(EngineData.InsertClient, Conexion);
                 try
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@Name", model.Name);
+                    command.Parameters.AddWithValue("@LastName", model.LastName);
                     command.Parameters.AddWithValue("@Username", model.Username);
                     command.Parameters.AddWithValue("@Password",Funcion.ConvertirBase64(model.Username + model.Password));
                     command.Parameters.AddWithValue("@Email", model.Email);
-                    command.Parameters.AddWithValue("@FechaRegistro", model.FechaRegistro);
+                    command.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
+                    command.Parameters.AddWithValue("@FavoriteGame", model.FavoriteGame);
+                    command.Parameters.AddWithValue("@BirthDate", model.BirthDate);
+                    command.Parameters.AddWithValue("@Gender", model.Gender);
+                    command.Parameters.AddWithValue("@RegisteredDate", model.RegisteredDate);
                     command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -50,20 +56,27 @@ namespace ShineApi.Engine
             using (Conexion)
             {
                 Conexion.Open();
-                SqlCommand command = new SqlCommand(EngineData.GettUser, Conexion);
+                SqlCommand command = new SqlCommand(EngineData.GetClient, Conexion);
                 try
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Clear();
-                    command.Parameters.AddWithValue("@Username", model.Username);
+                    command.Parameters.AddWithValue("@Password", Funcion.ConvertirBase64(model.Username + model.Password));
                     command.Parameters.AddWithValue("@Email", model.Email);
                     lector = command.ExecuteReader();
                     if (lector.Read())
                     {
                         resultado.Id = lector.GetInt32(0);
-                        resultado.Username = lector.GetString(1);
-                        resultado.Password = lector.GetString(2);
-                        resultado.Email = lector.GetString(3);
+                        resultado.Name = lector.GetString(1);
+                        resultado.LastName = lector.GetString(2);
+                        resultado.Username = lector.GetString(3);
+                        resultado.Password = lector.GetString(4);
+                        resultado.Email = lector.GetString(5);
+                        resultado.PhoneNumber = lector.GetString(6);
+                        resultado.FavoriteGame = lector.GetString(7);
+                        resultado.BirthDate = lector.GetDateTime(8);
+                        resultado.Gender = lector.GetString(9);
+                        resultado.RegisteredDate = lector.GetDateTime(10);
                     }
                 }
                 catch (Exception ex)

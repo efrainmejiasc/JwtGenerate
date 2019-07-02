@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShineApi.Data;
+using ShineApi.Models;
 
 namespace ShineApi.Controllers
 {
@@ -36,7 +36,7 @@ namespace ShineApi.Controllers
         // POST api/values
         [AllowAnonymous]
         [HttpPost]
-        public List<Client> Post()
+        public List<Models.Client> Post()
         {
             return (context.Client.ToList());
         }
