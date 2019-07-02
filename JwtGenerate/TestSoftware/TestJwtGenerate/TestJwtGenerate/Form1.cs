@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,7 +27,7 @@ namespace TestJwtGenerate
 
         private void Form1_Load(object sender, EventArgs e)
         {
-          
+            NumberFactory();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -39,9 +40,9 @@ namespace TestJwtGenerate
             string resultado = string.Empty;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445//api/CreateUser");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445//api/CreateClient");
             User User = new User();
-            User = SetUser();
+            User = SetUser(false);
             var formData = new List<KeyValuePair<string, string>>();
             formData.Add(new KeyValuePair<string, string>("Username", User.Username));
             formData.Add(new KeyValuePair<string, string>("Password", User.Password));
@@ -51,7 +52,7 @@ namespace TestJwtGenerate
             formData.Add(new KeyValuePair<string, string>("ExpiracionToken", User.ExpiracionToken));
             request.Content = new FormUrlEncodedContent(formData);
             var stringified = JsonConvert.SerializeObject(User);
-            var response = await client.PostAsync("http://localhost:58445/api/CreateUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("http://localhost:58445/api/CreateClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
                 resultado = response.Content.ReadAsStringAsync().Result;
@@ -64,7 +65,7 @@ namespace TestJwtGenerate
             return resultado;
         }
 
-        private User SetUser()
+        private User SetUser(bool n)
         {
             User User = new User
             {
@@ -80,8 +81,9 @@ namespace TestJwtGenerate
                 BirthDate = Convert.ToDateTime("1972/02/08"),
                 RegisteredDate = DateTime.UtcNow,
                 ExpiracionToken = "",
-                SignatureApp ="MiFirmaElectronica"
-            };
+                SignatureApp = "MiFirmaElectronica",
+                RegisteredStatus = n
+          };
             return User;
         }
 
@@ -95,9 +97,9 @@ namespace TestJwtGenerate
             string resultado = string.Empty;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445/api/LoginUser");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445/api/LoginClient");
             User User = new User();
-            User = SetUser();
+            User = SetUser(true);
             var formData = new List<KeyValuePair<string, string>>();
             formData.Add(new KeyValuePair<string, string>("Username", User.Username));
             formData.Add(new KeyValuePair<string, string>("Password", User.Password));
@@ -105,7 +107,7 @@ namespace TestJwtGenerate
 
             request.Content = new FormUrlEncodedContent(formData);
             var stringified = JsonConvert.SerializeObject(User);
-            var response = await client.PostAsync("http://localhost:58445/api/LoginUser", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("http://localhost:58445/api/LoginClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
                 resultado = response.Content.ReadAsStringAsync().Result;
@@ -129,6 +131,32 @@ namespace TestJwtGenerate
             string[] p = token.Split('.');
             string resultado = DecodeBase64(p[1]);
             int K = 0;
+        }
+
+
+        public string NumberFactory()
+        {
+            string resultado = string.Empty;
+            int s = DateTime.Now.Millisecond;
+            for (int i = 0; i <= 3; i++)
+            {
+                if (i == 0)
+                    resultado = Aleatorio(s).ToString();
+                else
+                    resultado = s.ToString() + Aleatorio(s).ToString();
+
+                Thread.Sleep(600);
+                s = DateTime.Now.Millisecond;
+            }
+            textBox1.Text = resultado;
+            return resultado;
+        }
+
+        private int Aleatorio(int s)
+        {
+            Random rnd = new Random(s);
+            int n = rnd.Next(1, 9);
+            return n;
         }
     }
 }

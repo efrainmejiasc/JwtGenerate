@@ -36,12 +36,14 @@ namespace ShineApi.Engine
                     command.Parameters.AddWithValue("@BirthDate", model.BirthDate);
                     command.Parameters.AddWithValue("@Gender", model.Gender);
                     command.Parameters.AddWithValue("@RegisteredDate", model.RegisteredDate);
+                    command.Parameters.AddWithValue("@RegisteredStatus", model.RegisteredStatus);
                     command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
                     Conexion.Close();
                     failure = ex.ToString();
+                    return resultado;
                 }
                 Conexion.Close();
                 resultado = true;
@@ -77,6 +79,7 @@ namespace ShineApi.Engine
                         resultado.BirthDate = lector.GetDateTime(8);
                         resultado.Gender = lector.GetString(9);
                         resultado.RegisteredDate = lector.GetDateTime(10);
+                        resultado.RegisteredStatus = lector.GetBoolean(11);
                     }
                 }
                 catch (Exception ex)
@@ -94,6 +97,26 @@ namespace ShineApi.Engine
         public string Failure()
         {
             return failure;
+        }
+
+        public bool GetUser (string username , string password , string email)
+        {
+            Conexion.Open();
+            Int64 resultado = -1;
+            SqlCommand command = new SqlCommand(EngineData.GetClientExist, Conexion);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("@Password", Funcion.ConvertirBase64(username + password));
+            command.Parameters.AddWithValue("@Email", email);
+            object obj = command.ExecuteScalar();
+            Conexion.Close();
+            if (obj != DBNull.Value)
+                resultado = Convert.ToInt64(obj);
+           
+            if (resultado > 0)
+                return true;
+            else
+                return false;
         }
     }
 }

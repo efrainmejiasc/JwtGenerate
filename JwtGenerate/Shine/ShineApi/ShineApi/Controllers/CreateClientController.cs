@@ -14,7 +14,7 @@ namespace ShineApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CreateUserController : ControllerBase
+    public class CreateClientController : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost]
@@ -42,5 +42,25 @@ namespace ShineApi.Controllers
             response.Headers.Location = new Uri(EngineData.UrlBase + EngineData.EndPointLogin);
             return response;
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public string GetConfirmationCode(string username , string password , string email)
+        {
+            string response = string.Empty;
+            EngineProyect Funcion = new EngineProyect();
+            if (username == null || username == string.Empty || password == null || password == string.Empty || email == null || email == string.Empty)
+                return response = Funcion.BuildingVerificationCode(string.Empty, HttpStatusCode.NotImplemented.ToString());
+
+            EngineDb Metodo = new EngineDb();
+            bool resultado = Metodo.GetUser(username, password, email);
+            if(!resultado)
+                return response = Funcion.BuildingVerificationCode(string.Empty, HttpStatusCode.ExpectationFailed.ToString());//No existe el usuario 417
+
+            string code = Funcion.NumberFactory();
+            return response = Funcion.BuildingVerificationCode(code, HttpStatusCode.OK.ToString());//No existe el usuario 417
+
+        }
+
     }
 }

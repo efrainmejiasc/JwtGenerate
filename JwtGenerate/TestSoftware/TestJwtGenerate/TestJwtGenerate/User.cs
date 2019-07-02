@@ -22,5 +22,6 @@ namespace TestJwtGenerate
         public string ExpiracionToken { get; set; }
         public string SignatureApp { get; set; }
         public string Token { get; set; }
+        public bool RegisteredStatus { get; set; }
     }
 }

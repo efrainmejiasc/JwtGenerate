@@ -35,5 +35,7 @@ namespace ShineApi.Engine
         public static string InsertClient= "Sp_InsertClient";
 
         public static string GetClient = "Sp_GetClient";
+
+        public static string GetClientExist = "Sp_GetClientExist";
     }
 }

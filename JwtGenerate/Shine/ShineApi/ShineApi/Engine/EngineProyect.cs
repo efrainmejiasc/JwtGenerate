@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using ShineApi.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ShineApi.Engine
@@ -44,6 +47,40 @@ namespace ShineApi.Engine
                 resultado = true;
             }
             return resultado;
+        }
+
+        public string NumberFactory()
+        {
+            string resultado = string.Empty;
+            int s = DateTime.Now.Millisecond;
+            for (int i = 0; i<= 3; i++)
+            {
+                if (i == 0)
+                    resultado = Aleatorio(s).ToString();
+                else 
+                   resultado = s.ToString() + Aleatorio(s).ToString();
+
+                Thread.Sleep(600);
+                s = DateTime.Now.Millisecond;
+            }
+            return resultado;
+        }
+
+        private int Aleatorio(int s)
+        {
+            Random rnd = new Random(s);
+            int n = rnd.Next(0, 9999);
+            return n;
+        }
+
+        public string BuildingVerificationCode(string code , string status)
+        {
+            string json = string.Empty;
+            VerificationCode R = new VerificationCode();
+            R.Code = code;
+            R.Status = status;
+            json = JsonConvert.SerializeObject(R);
+            return json;
         }
     }
 }

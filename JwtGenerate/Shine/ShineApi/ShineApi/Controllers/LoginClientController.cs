@@ -17,7 +17,7 @@ namespace ShineApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginUserController : ControllerBase
+    public class LoginClientController : ControllerBase
     {
         private IConfiguration _config;
 
