@@ -155,7 +155,7 @@ namespace ShineApi.Engine
             using (Conexion)
             {
                 Conexion.Open();
-                SqlCommand command = new SqlCommand(EngineData.InsertClient, Conexion);
+                SqlCommand command = new SqlCommand(EngineData.PutActivateAccount, Conexion);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Clear();
                 command.Parameters.AddWithValue("@Password", Funcion.ConvertirBase64(model.Username + model.Password));
@@ -163,9 +163,8 @@ namespace ShineApi.Engine
                 command.Parameters.AddWithValue("@Code", model.Code);
                 command.Parameters.AddWithValue("@VerificationDate", DateTime.UtcNow);
                 command.Parameters.AddWithValue("@Status", model.Status);
-                command.ExecuteNonQuery();
+                resultado = (bool) command.ExecuteScalar();
                 Conexion.Close();
-                resultado = true;
             }
             return resultado;
         }

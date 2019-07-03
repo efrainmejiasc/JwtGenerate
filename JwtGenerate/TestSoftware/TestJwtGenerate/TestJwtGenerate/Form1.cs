@@ -158,5 +158,53 @@ namespace TestJwtGenerate
             int n = rnd.Next(1, 9);
             return n;
         }
+
+        private void Button4_Click(object sender, EventArgs e)
+        {
+            ActivarCuenta();
+        }
+
+        public async Task<string> ActivarCuenta()
+        {
+            string resultado = string.Empty;
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445/api/CreateClient");
+            CodeToVerification ToVerification = new CodeToVerification();
+            ToVerification  = SetToVerification();
+            var formData = new List<KeyValuePair<string, string>>();
+            formData.Add(new KeyValuePair<string, string>("UserName", ToVerification.Username));
+            formData.Add(new KeyValuePair<string, string>("Password", ToVerification.Password));
+            formData.Add(new KeyValuePair<string, string>("Email", ToVerification.Email));
+            formData.Add(new KeyValuePair<string, string>("Code", ToVerification.Code));
+
+            request.Content = new FormUrlEncodedContent(formData);
+            var stringified = JsonConvert.SerializeObject(ToVerification);
+            var response = await client.PutAsync("http://localhost:58445/api/CreateClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            if (response.IsSuccessStatusCode)
+            {
+                resultado = response.Content.ReadAsStringAsync().Result;
+            }
+            else
+            {
+                resultado = response.StatusCode.ToString();
+            }
+            return resultado;
+        }
+
+        private CodeToVerification SetToVerification()
+        {
+            CodeToVerification S = new CodeToVerification()
+            {
+                Username = "EfrainMejiasC",
+                Password = "1234santiago",
+                Email = "efrainmejiasc@gmail.com",
+                Code = "426680",
+                Status = true
+            };
+            return S;
+        }
+
+
     }
 }
