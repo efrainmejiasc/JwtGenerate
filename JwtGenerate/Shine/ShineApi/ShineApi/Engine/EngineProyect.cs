@@ -56,12 +56,17 @@ namespace ShineApi.Engine
             for (int i = 0; i<= 3; i++)
             {
                 if (i == 0)
+                {
                     resultado = Aleatorio(s).ToString();
-                else 
-                   resultado = s.ToString() + Aleatorio(s).ToString();
+                    s = DateTime.Now.Millisecond;
+                }
+                else
+                {
+                    resultado = s.ToString() + Aleatorio(s).ToString();
+                    s = DateTime.Now.Millisecond;
+                }
 
-                Thread.Sleep(600);
-                s = DateTime.Now.Millisecond;
+                Thread.Sleep(600);    
             }
             return resultado;
         }
@@ -69,7 +74,7 @@ namespace ShineApi.Engine
         private int Aleatorio(int s)
         {
             Random rnd = new Random(s);
-            int n = rnd.Next(0, 9999);
+            int n = rnd.Next(0, 9);
             return n;
         }
 
