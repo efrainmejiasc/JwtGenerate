@@ -16,6 +16,14 @@ namespace ShineApi.Controllers
     [ApiController]
     public class CreateClientController : ControllerBase
     {
+
+        private readonly ShineContext context;
+
+        public CreateClientController(ShineContext _context)
+        {
+            context = _context;
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public HttpResponseMessage PostCreateUser([FromBody] User create)
@@ -45,12 +53,12 @@ namespace ShineApi.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public string GetConfirmationCode(string username , string password , string email)
+        public string GetConfirmationCode(string username , string password , string email)//retorna JSON
         {
             string response = string.Empty;
             EngineProyect Funcion = new EngineProyect();
             if (username == null || username == string.Empty || password == null || password == string.Empty || email == null || email == string.Empty)
-                return response = Funcion.BuildingVerificationCode(string.Empty, HttpStatusCode.NotImplemented.ToString());
+                return response = Funcion.BuildingVerificationCode(string.Empty, HttpStatusCode.NotImplemented.ToString());//Modelo incompleto 501
 
             EngineDb Metodo = new EngineDb();
             bool resultado = Metodo.GetUser(username, password, email);
@@ -58,8 +66,33 @@ namespace ShineApi.Controllers
                 return response = Funcion.BuildingVerificationCode(string.Empty, HttpStatusCode.ExpectationFailed.ToString());//No existe el usuario 417
 
             string code = Funcion.NumberFactory();
-            return response = Funcion.BuildingVerificationCode(code, HttpStatusCode.OK.ToString());//No existe el usuario 417
+            CodeToVerification model = new CodeToVerification();
+            model = Funcion.BuildingVerificationCode(username, password, email, code,false);
 
+            EngineDb Entidad = new EngineDb(this.context);
+            resultado = Entidad.InsertCodeToVerification(model);
+            if (!resultado)
+                return response = Funcion.BuildingVerificationCode(string.Empty, HttpStatusCode.Conflict.ToString());//No inserto el codigo 409
+
+            return response = Funcion.BuildingVerificationCode(code, HttpStatusCode.OK.ToString());
+        }
+
+        [AllowAnonymous]
+        [HttpPut]
+        public string PutActivateAcount([FromBody] CodeToVerification act)//retorna JSON
+        {
+            string response = string.Empty;
+            EngineProyect Funcion = new EngineProyect();
+            if (act.Username == null || act.Username == string.Empty || act.Password == null || act.Password == string.Empty || act.Email == null || act.Email == string.Empty || act.Code == null || act.Code == string.Empty)
+                return response = Funcion.BuildingVerificationCode(string.Empty, HttpStatusCode.NotImplemented.ToString());
+
+            EngineDb Metodo = new EngineDb();
+            bool resultado = false;
+            resultado = Metodo.PutActivateAccount(act);
+            if (!resultado)
+                return response = Funcion.BuildingVerificationCode(act.Code, HttpStatusCode.Conflict.ToString());//No Actualizo el codigo 409
+
+            return response = Funcion.BuildingVerificationCode(act.Code, HttpStatusCode.OK.ToString());
         }
 
     }

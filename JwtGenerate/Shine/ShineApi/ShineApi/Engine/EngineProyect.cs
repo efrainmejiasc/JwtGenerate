@@ -82,5 +82,20 @@ namespace ShineApi.Engine
             json = JsonConvert.SerializeObject(R);
             return json;
         }
+
+        public CodeToVerification BuildingVerificationCode(string username, string password, string email,string code,bool status )
+        {
+            CodeToVerification R = new CodeToVerification()
+            {
+                Username = username,
+                Password = ConvertirBase64(username + password),
+                Email = email,
+                SendDate = DateTime.UtcNow,
+                VerificationDate = DateTime.UtcNow,
+                Status = status ,
+                Code = code,
+            };
+            return R;
+        }
     }
 }

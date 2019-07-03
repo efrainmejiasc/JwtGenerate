@@ -14,6 +14,17 @@ namespace ShineApi.Engine
         private EngineData DataName = EngineData.Instance();
         private EngineProyect Funcion = new EngineProyect();
         private string failure = string.Empty;
+        private readonly ShineContext context;
+
+        public EngineDb()
+        {
+
+        }
+
+        public EngineDb (ShineContext _context)
+        {
+            context = _context;
+        }
 
         public bool InsertUser(User model)
         {
@@ -119,5 +130,45 @@ namespace ShineApi.Engine
             else
                 return false;
         }
+
+
+
+        public bool InsertCodeToVerification (CodeToVerification model)
+        {
+            bool resultado = false;
+            try
+            {
+                context.CodeToVerification.Add(model);
+                context.SaveChanges();
+                resultado = true;
+            }
+            catch
+            {
+                return resultado;
+            }
+            return resultado;
+        }
+
+        public bool PutActivateAccount(CodeToVerification model)
+        {
+            bool resultado = false;
+            using (Conexion)
+            {
+                Conexion.Open();
+                SqlCommand command = new SqlCommand(EngineData.InsertClient, Conexion);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Clear();
+                command.Parameters.AddWithValue("@Password", Funcion.ConvertirBase64(model.Username + model.Password));
+                command.Parameters.AddWithValue("@Email", model.Email);
+                command.Parameters.AddWithValue("@Code", model.Code);
+                command.Parameters.AddWithValue("@VerificationDate", DateTime.UtcNow);
+                command.Parameters.AddWithValue("@Status", model.Status);
+                command.ExecuteNonQuery();
+                Conexion.Close();
+                resultado = true;
+            }
+            return resultado;
+        }
+
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShineApi.Models
 {
+    [Table("Client")]
     public class Client
     {
         public int Id { get; set; }
