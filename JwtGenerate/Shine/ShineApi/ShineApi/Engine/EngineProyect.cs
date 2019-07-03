@@ -61,8 +61,8 @@ namespace ShineApi.Engine
                 }
                 else
                 {
-                    resultado = s.ToString() + Aleatorio(s).ToString();
                     s = DateTime.Now.Millisecond;
+                    resultado = s.ToString() + Aleatorio(s).ToString();  
                 }
 
                 Thread.Sleep(600);    
