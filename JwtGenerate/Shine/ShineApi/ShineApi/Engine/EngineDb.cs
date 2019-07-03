@@ -65,6 +65,7 @@ namespace ShineApi.Engine
                     command.Parameters.Clear();
                     command.Parameters.AddWithValue("@Password", Funcion.ConvertirBase64(model.Username + model.Password));
                     command.Parameters.AddWithValue("@Email", model.Email);
+                    command.Parameters.AddWithValue("@RegisteredStatus", model.RegisteredStatus);
                     lector = command.ExecuteReader();
                     if (lector.Read())
                     {

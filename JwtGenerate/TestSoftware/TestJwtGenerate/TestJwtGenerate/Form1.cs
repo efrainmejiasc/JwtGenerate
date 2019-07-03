@@ -40,7 +40,7 @@ namespace TestJwtGenerate
             string resultado = string.Empty;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445//api/CreateClient");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/CreateClient");
             User User = new User();
             User = SetUser(false);
             var formData = new List<KeyValuePair<string, string>>();
@@ -52,7 +52,7 @@ namespace TestJwtGenerate
             formData.Add(new KeyValuePair<string, string>("ExpiracionToken", User.ExpiracionToken));
             request.Content = new FormUrlEncodedContent(formData);
             var stringified = JsonConvert.SerializeObject(User);
-            var response = await client.PostAsync("http://localhost:58445/api/CreateClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("http://localhost:58663/api/CreateClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
                 resultado = response.Content.ReadAsStringAsync().Result;
@@ -97,9 +97,9 @@ namespace TestJwtGenerate
             string resultado = string.Empty;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445/api/LoginClient");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/LoginClient");
             User User = new User();
-            User = SetUser(true);
+            User = SetUser(false);
             var formData = new List<KeyValuePair<string, string>>();
             formData.Add(new KeyValuePair<string, string>("Username", User.Username));
             formData.Add(new KeyValuePair<string, string>("Password", User.Password));
@@ -107,7 +107,7 @@ namespace TestJwtGenerate
 
             request.Content = new FormUrlEncodedContent(formData);
             var stringified = JsonConvert.SerializeObject(User);
-            var response = await client.PostAsync("http://localhost:58445/api/LoginClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("http://localhost:58663/api/LoginClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
                 resultado = response.Content.ReadAsStringAsync().Result;
