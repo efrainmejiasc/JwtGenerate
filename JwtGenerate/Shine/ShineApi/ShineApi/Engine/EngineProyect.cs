@@ -58,7 +58,6 @@ namespace ShineApi.Engine
                 if (i == 0)
                 {
                     resultado = Aleatorio(s).ToString();
-                    s = DateTime.Now.Millisecond;
                 }
                 else
                 {
