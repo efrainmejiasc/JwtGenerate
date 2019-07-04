@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,12 +35,13 @@ namespace ShineApi.Controllers
         }
 
         // POST api/values
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpPost]
         public List<Models.Client> Post()
         {
             return (context.Client.ToList());
         }
+
 
         // PUT api/values/5
         [HttpPut("{id}")]

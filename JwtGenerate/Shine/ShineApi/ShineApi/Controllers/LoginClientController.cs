@@ -56,18 +56,18 @@ namespace ShineApi.Controllers
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EngineData.JwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[] {
+            var KClaims = new[] {
                                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
                                new Claim(JwtRegisteredClaimNames.GivenName, userInfo.Name),
                                new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
-                               new Claim("ExpiracionToken", DateTime.UtcNow.AddMinutes(15).ToString()),
+                               new Claim("ExpiracionToken", DateTime.UtcNow.AddMinutes(2).ToString()),
                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var token = new JwtSecurityToken(EngineData.JwtKey,
               EngineData.JwtIssuer,
-              null,
-              expires: DateTime.UtcNow.AddMinutes(15),
+              claims:KClaims,
+              expires: DateTime.UtcNow.AddMinutes(2),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

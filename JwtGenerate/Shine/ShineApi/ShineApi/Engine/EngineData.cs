@@ -30,7 +30,7 @@ namespace ShineApi.Engine
 
         public static string EndPointLogin = "LoginClient";
 
-        public static string SignatureApp = "MiFirmaElectronica";
+        public static string SignatureApp = "U0hJTkVhcGlTZWNyZXRLZXkyMDE5RWZyYWluQmFja0VuZEhlY3RvckFwcE1vYmls";
 
         public static string InsertClient= "Sp_InsertClient";
 

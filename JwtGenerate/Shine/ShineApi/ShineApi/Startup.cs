@@ -85,6 +85,7 @@ namespace ShineApi
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

@@ -81,7 +81,7 @@ namespace TestJwtGenerate
                 BirthDate = Convert.ToDateTime("1972/02/08"),
                 RegisteredDate = DateTime.UtcNow,
                 ExpiracionToken = "",
-                SignatureApp = "MiFirmaElectronica",
+                SignatureApp = "U0hJTkVhcGlTZWNyZXRLZXkyMDE5RWZyYWluQmFja0VuZEhlY3RvckFwcE1vYmls",
                 RegisteredStatus = n
           };
             return User;
@@ -127,11 +127,16 @@ namespace TestJwtGenerate
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
+        public string ConvertirBase64(string cadena)
+        {
+            var comprobanteXmlPlainTextBytes = Encoding.UTF8.GetBytes(cadena);
+            var cadenaBase64 = Convert.ToBase64String(comprobanteXmlPlainTextBytes);
+            return cadenaBase64;
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
-            string[] p = token.Split('.');
-            string resultado = DecodeBase64(p[1]);
-            int K = 0;
+            textBox2.Text = ConvertirBase64("SHINEapiSecretKey2019EfrainBackEndHectorAppMobil");
         }
 
 
@@ -206,6 +211,43 @@ namespace TestJwtGenerate
             return S;
         }
 
+        private void Button5_Click(object sender, EventArgs e)
+        {
+            EnviarDocumentoPost();
+        }
+
+        public async Task<string> EnviarDocumentoPost()
+        {
+            string json = string.Empty;
+            string accesToken = SetToken();
+            CodeToVerification obj = new CodeToVerification();
+            obj = SetToVerification();
+            json = JsonConvert.SerializeObject(obj);
+            HttpClient client = new HttpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accesToken);
+            HttpResponseMessage response = await client.PostAsync("http://localhost:58445/api/values", new StringContent(json, Encoding.UTF8, "application/json"));
+            if (response.IsSuccessStatusCode)
+            {
+                json = response.Headers.Location.ToString();
+                int n = 0;
+            }
+            else
+            {
+                json = response.IsSuccessStatusCode.ToString();
+            }
+
+            return json;
+        }
+
+        public string SetToken()
+        {
+            string stringToken = textBox2.Text;
+            JwtToken obj = JsonConvert.DeserializeObject<JwtToken>(stringToken);
+            return obj.token;
+        }
 
     }
 }
