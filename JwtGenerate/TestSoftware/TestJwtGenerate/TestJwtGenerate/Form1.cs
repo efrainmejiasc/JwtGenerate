@@ -97,7 +97,7 @@ namespace TestJwtGenerate
             string resultado = string.Empty;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58663/api/LoginClient");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445/api/LoginClient");
             User User = new User();
             User = SetUser(false);
             var formData = new List<KeyValuePair<string, string>>();
@@ -107,11 +107,12 @@ namespace TestJwtGenerate
 
             request.Content = new FormUrlEncodedContent(formData);
             var stringified = JsonConvert.SerializeObject(User);
-            var response = await client.PostAsync("http://localhost:58663/api/LoginClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("http://localhost:58445/api/LoginClient", new StringContent(stringified, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
                 resultado = response.Content.ReadAsStringAsync().Result;
-                User = JsonConvert.DeserializeObject<User>(resultado);
+                //User = JsonConvert.DeserializeObject<User>(resultado);
+                textBox2.Text = resultado;
             }
             else
             {
