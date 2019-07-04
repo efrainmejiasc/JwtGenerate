@@ -12,6 +12,7 @@ namespace ShineApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class ValuesController : ControllerBase
     {
         private readonly ShineContext  context;
@@ -37,6 +38,7 @@ namespace ShineApi.Controllers
         // POST api/values
         //[AllowAnonymous]
         [HttpPost]
+        [Authorize]
         public List<Models.Client> Post()
         {
             return (context.Client.ToList());

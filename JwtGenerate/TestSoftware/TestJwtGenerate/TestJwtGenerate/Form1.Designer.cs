@@ -88,7 +88,7 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(45, 82);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(1312, 20);
+            this.textBox2.Size = new System.Drawing.Size(1759, 20);
             this.textBox2.TabIndex = 5;
             // 
             // button5
@@ -105,7 +105,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1369, 450);
+            this.ClientSize = new System.Drawing.Size(1816, 450);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button4);

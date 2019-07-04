@@ -216,30 +216,28 @@ namespace TestJwtGenerate
             EnviarDocumentoPost();
         }
 
-        public async Task<string> EnviarDocumentoPost()
+
+        private async Task<string> EnviarDocumentoPost()
         {
-            string json = string.Empty;
+            string resultado = string.Empty;
             string accesToken = SetToken();
-            CodeToVerification obj = new CodeToVerification();
-            obj = SetToVerification();
-            json = JsonConvert.SerializeObject(obj);
             HttpClient client = new HttpClient();
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accesToken);
-            HttpResponseMessage response = await client.PostAsync("http://localhost:58445/api/values", new StringContent(json, Encoding.UTF8, "application/json"));
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58445/api/values");
+            var response = await client.PostAsync("http://localhost:58445/api/values", new StringContent(accesToken, Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {
-                json = response.Headers.Location.ToString();
-                int n = 0;
+                resultado = response.Content.ReadAsStringAsync().Result;
+                //User = JsonConvert.DeserializeObject<User>(resultado);
+                textBox2.Text = resultado;
             }
             else
             {
-                json = response.IsSuccessStatusCode.ToString();
+                resultado = response.StatusCode.ToString();
             }
-
-            return json;
+            return resultado;
         }
 
         public string SetToken()
